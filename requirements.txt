@@ -3,5 +3,5 @@ uvicorn
 flask
 gunicorn
 numpy
-tensorflow
+tensorflow-cpu
 python-multipart
