@@ -1,15 +1,22 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pickle
 import numpy as np
 
 app = FastAPI()
 
-# تحميل الموديل
+# ✅ أضف ده
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
-# تعريف شكل الـ input
 class Readings(BaseModel):
     reading_1: float
     reading_2: float
@@ -34,6 +41,12 @@ def predict(data: Readings):
     ]])
     
     prediction = model.predict(features)[0]
+    result = "normal" if prediction == 1 else "not normal"
+    
+    return {
+        "result": result,
+        "raw_prediction": int(prediction)
+    }
     
     result = "normal" if prediction == 1 else "not normal"
     
